@@ -1,8 +1,8 @@
 <div class="kanban-board">
-  <div class="board-column">
+  <div class="column">
     <div class="column-header">
-      <h2>To Do <span class="task-count">{{ getTasksCount('todo') }}</span></h2>
-      <button (click)="addTask('todo')" class="add-task-btn">+</button>
+      <h2>To Do ({{ getTasksCount('todo') }})</h2>
+      <button class="add-task-btn" (click)="addTask('todo')">+</button>
     </div>
     <div
       cdkDropList
@@ -10,33 +10,42 @@
       [cdkDropListData]="todoTasks"
       [cdkDropListConnectedTo]="[inProgressList, doneList]"
       class="task-list"
-      (cdkDropListDropped)="drop($event)"
       id="todo"
+      (cdkDropListDropped)="drop($event)"
     >
-      <div class="task-card" *ngFor="let task of todoTasks" cdkDrag [class]="getPriorityClass(task.priority)">
-        <div class="task-header">
-          <div *ngIf="!task.isEditing" class="task-title" (click)="editTask(task)">{{ task.title }}</div>
-          <input *ngIf="task.isEditing" [(ngModel)]="task.title" (blur)="saveTask(task)" class="task-input" autofocus>
-          <div class="task-actions">
-            <select [(ngModel)]="task.priority" class="priority-select">
-              <option *ngFor="let p of priorities" [value]="p">{{ p }}</option>
-            </select>
-            <button class="delete-btn" (click)="deleteTask(task)">×</button>
+      <div class="task-card" *ngFor="let task of todoTasks" cdkDrag>
+        <ng-container *ngIf="editingTask?.id === task.id">
+          <app-task-edit
+            *ngIf="editingTask"
+            [task]="editingTask"
+            (save)="saveTask($event)"
+            (cancel)="cancelEdit()"
+          ></app-task-edit>
+        </ng-container>
+        <ng-container *ngIf="editingTask?.id !== task.id">
+          <div class="task-header">
+            <h3>{{ task.title }}</h3>
+            <div class="task-actions">
+              <button class="edit-btn" (click)="editTask(task)">Edit</button>
+              <button class="delete-btn" (click)="deleteTask(task.id!)">×</button>
+            </div>
           </div>
-        </div>
-        <div class="task-content">
-          <div *ngIf="!task.isEditing" class="task-description" (click)="editTask(task)">{{ task.description }}</div>
-          <textarea *ngIf="task.isEditing" [(ngModel)]="task.description" (blur)="saveTask(task)" class="task-textarea"></textarea>
-          <input type="date" [(ngModel)]="task.dueDate" class="due-date-input">
-        </div>
+          <p class="task-description">{{ task.description }}</p>
+          <div class="task-footer">
+            <span class="priority-badge" [class]="getPriorityClass(task.priority)">
+              {{ task.priority }}
+            </span>
+            <span class="due-date">Due: {{ task.due_date }}</span>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>
 
-  <div class="board-column">
+  <div class="column">
     <div class="column-header">
-      <h2>In Progress <span class="task-count">{{ getTasksCount('inProgress') }}</span></h2>
-      <button (click)="addTask('inProgress')" class="add-task-btn">+</button>
+      <h2>In Progress ({{ getTasksCount('inProgress') }})</h2>
+      <button class="add-task-btn" (click)="addTask('inProgress')">+</button>
     </div>
     <div
       cdkDropList
@@ -44,33 +53,42 @@
       [cdkDropListData]="inProgressTasks"
       [cdkDropListConnectedTo]="[todoList, doneList]"
       class="task-list"
-      (cdkDropListDropped)="drop($event)"
       id="inProgress"
+      (cdkDropListDropped)="drop($event)"
     >
-      <div class="task-card" *ngFor="let task of inProgressTasks" cdkDrag [class]="getPriorityClass(task.priority)">
-        <div class="task-header">
-          <div *ngIf="!task.isEditing" class="task-title" (click)="editTask(task)">{{ task.title }}</div>
-          <input *ngIf="task.isEditing" [(ngModel)]="task.title" (blur)="saveTask(task)" class="task-input" autofocus>
-          <div class="task-actions">
-            <select [(ngModel)]="task.priority" class="priority-select">
-              <option *ngFor="let p of priorities" [value]="p">{{ p }}</option>
-            </select>
-            <button class="delete-btn" (click)="deleteTask(task)">×</button>
+      <div class="task-card" *ngFor="let task of inProgressTasks" cdkDrag>
+        <ng-container *ngIf="editingTask?.id === task.id">
+          <app-task-edit
+            *ngIf="editingTask"
+            [task]="editingTask"
+            (save)="saveTask($event)"
+            (cancel)="cancelEdit()"
+          ></app-task-edit>
+        </ng-container>
+        <ng-container *ngIf="editingTask?.id !== task.id">
+          <div class="task-header">
+            <h3>{{ task.title }}</h3>
+            <div class="task-actions">
+              <button class="edit-btn" (click)="editTask(task)">Edit</button>
+              <button class="delete-btn" (click)="deleteTask(task.id!)">×</button>
+            </div>
           </div>
-        </div>
-        <div class="task-content">
-          <div *ngIf="!task.isEditing" class="task-description" (click)="editTask(task)">{{ task.description }}</div>
-          <textarea *ngIf="task.isEditing" [(ngModel)]="task.description" (blur)="saveTask(task)" class="task-textarea"></textarea>
-          <input type="date" [(ngModel)]="task.dueDate" class="due-date-input">
-        </div>
+          <p class="task-description">{{ task.description }}</p>
+          <div class="task-footer">
+            <span class="priority-badge" [class]="getPriorityClass(task.priority)">
+              {{ task.priority }}
+            </span>
+            <span class="due-date">Due: {{ task.due_date }}</span>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>
 
-  <div class="board-column">
+  <div class="column">
     <div class="column-header">
-      <h2>Done <span class="task-count">{{ getTasksCount('done') }}</span></h2>
-      <button (click)="addTask('done')" class="add-task-btn">+</button>
+      <h2>Done ({{ getTasksCount('done') }})</h2>
+      <button class="add-task-btn" (click)="addTask('done')">+</button>
     </div>
     <div
       cdkDropList
@@ -78,25 +96,34 @@
       [cdkDropListData]="doneTasks"
       [cdkDropListConnectedTo]="[todoList, inProgressList]"
       class="task-list"
-      (cdkDropListDropped)="drop($event)"
       id="done"
+      (cdkDropListDropped)="drop($event)"
     >
-      <div class="task-card" *ngFor="let task of doneTasks" cdkDrag [class]="getPriorityClass(task.priority)">
-        <div class="task-header">
-          <div *ngIf="!task.isEditing" class="task-title" (click)="editTask(task)">{{ task.title }}</div>
-          <input *ngIf="task.isEditing" [(ngModel)]="task.title" (blur)="saveTask(task)" class="task-input" autofocus>
-          <div class="task-actions">
-            <select [(ngModel)]="task.priority" class="priority-select">
-              <option *ngFor="let p of priorities" [value]="p">{{ p }}</option>
-            </select>
-            <button class="delete-btn" (click)="deleteTask(task)">×</button>
+      <div class="task-card" *ngFor="let task of doneTasks" cdkDrag>
+        <ng-container *ngIf="editingTask?.id === task.id">
+          <app-task-edit
+            *ngIf="editingTask"
+            [task]="editingTask"
+            (save)="saveTask($event)"
+            (cancel)="cancelEdit()"
+          ></app-task-edit>
+        </ng-container>
+        <ng-container *ngIf="editingTask?.id !== task.id">
+          <div class="task-header">
+            <h3>{{ task.title }}</h3>
+            <div class="task-actions">
+              <button class="edit-btn" (click)="editTask(task)">Edit</button>
+              <button class="delete-btn" (click)="deleteTask(task.id!)">×</button>
+            </div>
           </div>
-        </div>
-        <div class="task-content">
-          <div *ngIf="!task.isEditing" class="task-description" (click)="editTask(task)">{{ task.description }}</div>
-          <textarea *ngIf="task.isEditing" [(ngModel)]="task.description" (blur)="saveTask(task)" class="task-textarea"></textarea>
-          <input type="date" [(ngModel)]="task.dueDate" class="due-date-input">
-        </div>
+          <p class="task-description">{{ task.description }}</p>
+          <div class="task-footer">
+            <span class="priority-badge" [class]="getPriorityClass(task.priority)">
+              {{ task.priority }}
+            </span>
+            <span class="due-date">Due: {{ task.due_date }}</span>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>

@@ -1,56 +1,45 @@
 .kanban-board {
   display: flex;
-  gap: 20px;
-  padding: 20px;
-  height: calc(100vh - 40px);
-  background-color: #f5f5f5;
+  gap: 1rem;
+  padding: 1rem;
+  height: calc(100vh - 2rem);
+  background: #f5f5f5;
 }
 
 .board-column {
   flex: 1;
   min-width: 300px;
-  background: #ffffff;
+  background: #e9ecef;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  max-height: 100%;
 }
 
 .column-header {
-  padding: 16px;
-  background: #f8f9fa;
+  padding: 1rem;
+  background: #dee2e6;
   border-radius: 8px 8px 0 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #e9ecef;
 }
 
 .column-header h2 {
   margin: 0;
-  color: #333;
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.task-count {
-  background: #e9ecef;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  color: #666;
+  font-size: 1.25rem;
+  color: #495057;
 }
 
 .add-task-btn {
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 50%;
   width: 30px;
   height: 30px;
-  font-size: 1.2rem;
+  border-radius: 50%;
+  border: none;
+  background: #28a745;
+  color: white;
+  font-size: 1.5rem;
+  line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -59,122 +48,112 @@
 }
 
 .add-task-btn:hover {
-  background: #0056b3;
+  background: #218838;
 }
 
 .task-list {
   flex: 1;
-  padding: 16px;
   overflow-y: auto;
+  padding: 1rem;
   min-height: 100px;
 }
 
 .task-card {
   background: white;
-  border: 1px solid #e9ecef;
   border-radius: 4px;
-  padding: 12px;
-  margin-bottom: 8px;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   cursor: move;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.2s;
 }
 
 .task-card:hover {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .task-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
 }
 
-.task-title {
-  font-weight: bold;
-  color: #333;
-  flex-grow: 1;
-  margin-right: 8px;
+.task-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #212529;
 }
 
 .task-actions {
   display: flex;
-  gap: 8px;
-  align-items: center;
+  gap: 0.5rem;
 }
 
-.priority-select {
-  padding: 4px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.9rem;
-}
-
+.edit-btn,
 .delete-btn {
-  background: #dc3545;
-  color: white;
   border: none;
-  border-radius: 4px;
-  width: 24px;
-  height: 24px;
-  font-size: 1rem;
+  background: none;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
   transition: background-color 0.2s;
 }
 
-.delete-btn:hover {
-  background: #c82333;
+.edit-btn {
+  color: #0d6efd;
 }
 
-.task-content {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.edit-btn:hover {
+  background: #e9ecef;
+}
+
+.delete-btn {
+  color: #dc3545;
+}
+
+.delete-btn:hover {
+  background: #f8d7da;
 }
 
 .task-description {
-  color: #666;
-  font-size: 0.9rem;
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin: 0.5rem 0;
   white-space: pre-wrap;
 }
 
-.task-input,
-.task-textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  margin-bottom: 8px;
+.task-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
 }
 
-.task-textarea {
-  min-height: 60px;
-  resize: vertical;
-}
-
-.due-date-input {
-  padding: 4px 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  color: #666;
+.priority-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
 .priority-high {
-  border-left: 4px solid #dc3545;
+  background: #f8d7da;
+  color: #dc3545;
 }
 
 .priority-medium {
-  border-left: 4px solid #ffc107;
+  background: #fff3cd;
+  color: #ffc107;
 }
 
 .priority-low {
-  border-left: 4px solid #28a745;
+  background: #d1e7dd;
+  color: #198754;
+}
+
+.due-date {
+  color: #6c757d;
 }
 
 .cdk-drag-preview {
