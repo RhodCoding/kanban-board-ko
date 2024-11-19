@@ -109,6 +109,18 @@ export class KanbanBoardComponent implements OnInit {
     this.taskService.createTask(newTask).subscribe({
       next: (response) => {
         if (response.success && response.task) {
+          // Add the new task to the appropriate list immediately
+          switch (status) {
+            case 'todo':
+              this.todoTasks.push(response.task);
+              break;
+            case 'inProgress':
+              this.inProgressTasks.push(response.task);
+              break;
+            case 'done':
+              this.doneTasks.push(response.task);
+              break;
+          }
           // Start editing the new task immediately
           this.editTask(response.task);
         } else {
