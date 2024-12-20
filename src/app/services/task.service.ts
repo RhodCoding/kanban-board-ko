@@ -62,27 +62,27 @@ export class TaskService {
     );
   }
 
-  updateTask(task: Task): Observable<ApiResponse> {
+updateTask(task: Task): Observable<ApiResponse> {
     console.log('Updating task:', task);
     if (!task.id) {
-      return throwError(() => new Error('Task ID is required'));
+        return throwError(() => new Error('Task ID is required'));
     }
     const url = `${this.apiUrl}?id=${task.id}`;
     return this.http.put<ApiResponse>(url, task, this.httpOptions).pipe(
-      map(response => {
-        console.log('Update task response:', response);
-        if (response && typeof response === 'object' && 'success' in response) {
-          if (response.success) {
-            return response;
-          } else {
-            throw new Error(response.message || 'Failed to update task');
-          }
-        }
-        throw new Error('Invalid response format');
-      }),
-      catchError(this.handleError)
+        map(response => {
+            console.log('Update task response:', response);
+            if (response && typeof response === 'object' && 'success' in response) {
+                if (response.success) {
+                    return response;
+                } else {
+                    throw new Error(response.message || 'Failed to update task');
+                }
+            }
+            throw new Error('Invalid response format');
+        }),
+        catchError(this.handleError)
     );
-  }
+}
 
   updateTaskStatus(taskId: number, status: string): Observable<ApiResponse> {
     if (!taskId) {

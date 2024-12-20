@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kanban Board API Test</title>
+    <script>
+        // Test creating a task
+        async function createTask() {
+            const response = await fetch('http://localhost/kanban-board-ko/backend/api.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title: 'Test Task',
+                    description: 'This is a test task',
+                    status: 'todo',
+                    due_date: '2024-01-30'
+                })
+            });
+            const data = await response.json();
+            document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+        }
+
+        // Test getting all tasks
+        async function getTasks() {
+            const response = await fetch('http://localhost/kanban-board-ko/backend/api.php');
+            const data = await response.json();
+            document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+        }
+    </script>
+</head>
+<body>
+    <h1>Kanban Board API Test</h1>
+    <button onclick="createTask()">Create Test Task</button>
+    <button onclick="getTasks()">Get All Tasks</button>
+    <pre id="result"></pre>
+</body>
+</html>
