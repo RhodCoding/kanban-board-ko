@@ -67,7 +67,7 @@ updateTask(task: Task): Observable<ApiResponse> {
     if (!task.id) {
         return throwError(() => new Error('Task ID is required'));
     }
-    const url = `${this.apiUrl}?id=${task.id}`;
+    const url = `${this.apiUrl}/${task.id}`;
     return this.http.put<ApiResponse>(url, task, this.httpOptions).pipe(
         map(response => {
             console.log('Update task response:', response);
@@ -88,7 +88,7 @@ updateTask(task: Task): Observable<ApiResponse> {
     if (!taskId) {
       return throwError(() => new Error('Task ID is required'));
     }
-    const url = `${this.apiUrl}?id=${taskId}`;
+    const url = `${this.apiUrl}/${taskId}`;
     return this.http.put<ApiResponse>(url, { status }, this.httpOptions).pipe(
       tap(response => console.log('Update status response:', response)),
       catchError(this.handleError)
@@ -99,7 +99,7 @@ updateTask(task: Task): Observable<ApiResponse> {
     if (!taskId) {
       return throwError(() => new Error('Task ID is required'));
     }
-    const url = `${this.apiUrl}?id=${taskId}`;
+    const url = `${this.apiUrl}/${taskId}`;
     return this.http.delete<ApiResponse>(url, this.httpOptions).pipe(
       tap(response => console.log('Delete task response:', response)),
       catchError(this.handleError)

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Task } from '../../models/task.model';
 import { TaskService } from '../../services/task.service';
@@ -13,10 +13,10 @@ import { TaskEditComponent } from '../task-edit/task-edit.component';
   styleUrls: ['./kanban-board.component.css']
 })
 export class KanbanBoardComponent implements OnInit {
+  @Input() editingTask: Task | null = null;
   todoTasks: Task[] = [];
   inProgressTasks: Task[] = [];
   doneTasks: Task[] = [];
-  editingTask: Task | null = null;
 
   constructor(private taskService: TaskService) {}
 
@@ -122,7 +122,7 @@ export class KanbanBoardComponent implements OnInit {
               break;
           }
           // Start editing the new task immediately
-          this.editTask(response.task);
+          this.editingTask = response.task;
         } else {
           alert('Failed to create task: ' + response.message);
         }

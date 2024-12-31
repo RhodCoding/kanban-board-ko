@@ -92,24 +92,24 @@ function createTask($data) {
 }
 
 // Update task status
-function updateTaskStatus($id, $status) {
+function updateTaskStatus($taskId, $status) {
     global $conn;
     
-    if (!$id || !$status) {
+    if (!$taskId || !$status) {
         sendJsonResponse(array('success' => false, 'message' => 'Task ID and status are required'), 400);
     }
 
-    $id = $conn->real_escape_string($id);
+    $taskId = $conn->real_escape_string($taskId);
     $status = $conn->real_escape_string($status);
 
     // First check if task exists
-    $checkQuery = "SELECT id FROM tasks WHERE id = $id";
+    $checkQuery = "SELECT id FROM tasks WHERE id = $taskId";
     $result = $conn->query($checkQuery);
     if ($result->num_rows === 0) {
         sendJsonResponse(array('success' => false, 'message' => 'Task not found'), 404);
     }
 
-    $query = "UPDATE tasks SET status = '$status', updated_at = CURRENT_TIMESTAMP WHERE id = $id";
+    $query = "UPDATE tasks SET status = '$status', updated_at = CURRENT_TIMESTAMP WHERE id = $taskId";
     
     if ($conn->query($query)) {
         sendJsonResponse(array('success' => true, 'message' => 'Task status updated successfully'));
@@ -120,12 +120,12 @@ function updateTaskStatus($id, $status) {
 }
 
 // Update task
-function updateTask($id, $data) {
+function updateTask($taskId, $data) {
     global $conn;
-    error_log("Updating task with ID: " . $id);
+    error_log("Updating task with ID: " . $taskId);
     error_log("Task data: " . print_r($data, true));
 
-    if (!$id) {
+    if (!$taskId) {
         sendJsonResponse(array('success' => false, 'message' => 'Task ID is required'), 400);
     }
 
@@ -135,7 +135,7 @@ function updateTask($id, $data) {
         sendJsonResponse(array('success' => false, 'message' => 'Missing required fields'), 400);
     }
 
-    $id = $conn->real_escape_string($id);
+    $taskId = $conn->real_escape_string($taskId);
     $title = $conn->real_escape_string($data->title);
     $description = $conn->real_escape_string($data->description);
     $status = $conn->real_escape_string($data->status);
@@ -143,24 +143,24 @@ function updateTask($id, $data) {
     $priority = isset($data->priority) ? $conn->real_escape_string($data->priority) : 'medium';
 
     // First check if task exists
-    $checkQuery = "SELECT id FROM tasks WHERE id = $id";
+    $checkQuery = "SELECT id FROM tasks WHERE id = $taskId";
     $result = $conn->query($checkQuery);
     if ($result->num_rows === 0) {
         sendJsonResponse(array('success' => false, 'message' => 'Task not found'), 404);
     }
 
-    $query = "UPDATE tasks SET 
+    $query = "UPDATE tasks SET
               title = '$title',
               description = '$description',
               status = '$status',
               due_date = '$due_date',
               priority = '$priority',
               updated_at = CURRENT_TIMESTAMP
-              WHERE id = $id";
+              WHERE id = $taskId";
     
     if ($conn->query($query)) {
         // Fetch the updated task
-        $selectQuery = "SELECT * FROM tasks WHERE id = $id";
+        $selectQuery = "SELECT * FROM tasks WHERE id = $taskId";
         $result = $conn->query($selectQuery);
         $updatedTask = $result->fetch_assoc();
         
@@ -176,16 +176,16 @@ function updateTask($id, $data) {
 }
 
 // Delete task
-function deleteTask($id) {
+function deleteTask($taskId) {
     global $conn;
     
-    if (!$id) {
+    if (!$taskId) {
         sendJsonResponse(array('success' => false, 'message' => 'Task ID is required'), 400);
     }
 
-    $id = $conn->real_escape_string($id);
+    $taskId = $conn->real_escape_string($taskId);
 
-    $query = "DELETE FROM tasks WHERE id = $id";
+    $query = "DELETE FROM tasks WHERE id = $taskId";
     
     if ($conn->query($query)) {
         sendJsonResponse(array('success' => true, 'message' => 'Task deleted successfully'));
@@ -212,10 +212,9 @@ try {
         case 'PUT':
             $data = json_decode(file_get_contents('php://input'));
             
-            // Get the task ID from the URL
-            $urlParts = parse_url($_SERVER['REQUEST_URI']);
-            parse_str($urlParts['query'] ?? '', $params);
-            $taskId = $params['id'] ?? null;
+            // Get the task ID from the URL path
+            $urlParts = explode('/', $_SERVER['REQUEST_URI']);
+            $taskId = end($urlParts);
             
             if (isset($data->status) && !isset($data->title)) {
                 // If only status is provided, update just the status
@@ -227,10 +226,9 @@ try {
             break;
 
         case 'DELETE':
-            // Get the task ID from the URL
-            $urlParts = parse_url($_SERVER['REQUEST_URI']);
-            parse_str($urlParts['query'] ?? '', $params);
-            $taskId = $params['id'] ?? null;
+            // Get the task ID from the URL path
+            $urlParts = explode('/', $_SERVER['REQUEST_URI']);
+            $taskId = end($urlParts);
             
             deleteTask($taskId);
             break;

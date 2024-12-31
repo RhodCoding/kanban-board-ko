@@ -61,6 +61,7 @@
           <app-task-edit
             *ngIf="editingTask"
             [task]="editingTask"
+            [task]="editingTask"
             (save)="saveTask($event)"
             (cancel)="cancelEdit()"
           ></app-task-edit>
